@@ -57,9 +57,9 @@ const dresscodes = [
 function App() {
   const nikita_chat_id = 5002463306;
   const regina_chat_id = 1078760880;
-  // const my_chat_id = 485073047;
+  const my_chat_id = 485073047;
   const [isSent, setIsSent] = useState(false);
-
+  const [error, setError] = useState('');
   async function sendMessage(data) {
     const req = await fetch(
       'https://api.telegram.org/bot8083365022:AAEoaDWDRJIkbVi0sz6yacwJA1-y8aUY80Q/sendMessage',
@@ -76,10 +76,16 @@ function App() {
 
   async function handleClick(e) {
     e.preventDefault();
+    if(firstName.length === 0) {
+      setError('Пожалуйста, введите свои данные');
+      return;
+    }
+    setError('');
     const form = e.target;
     const formData = new FormData(form);
     const guests = formData.get('guests');
     let chat_id = nikita_chat_id;
+    
     const data = {
       chat_id,
       text: `${firstName + ':   ' + guests}`,
@@ -239,6 +245,11 @@ function App() {
                     Если вы придете с парой, внесите все имена. 
                     Просьба написать без запятых и символов.
                   </p>
+                  {error && (
+                    <p className='text-red-500 text-xl'>
+                      {error}
+                    </p>
+                  )}
                   <input 
                     type="text" 
                     onChange={e => setFirstName(e.target.value)} 
